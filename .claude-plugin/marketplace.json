@@ -1,0 +1,15 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "claude-config",
+  "description": "Configuracao pessoal do Claude Code: skills e regras de resposta",
+  "owner": {
+    "name": "gabriel-lozorio"
+  },
+  "plugins": [
+    {
+      "name": "olympus",
+      "source": "./plugins/olympus",
+      "description": "Skills globais (code-kiss, commit-msg, estimate, explain, judge, kiss, review-doc-business, review-doc-tech, security, shorten, solution-kiss, write-doc) e o hook de regras de escopo e forma"
+    }
+  ]
+}

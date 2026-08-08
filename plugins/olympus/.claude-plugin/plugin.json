@@ -1,0 +1,8 @@
+{
+  "name": "olympus",
+  "version": "1.0.0",
+  "description": "Skills globais e hook UserPromptSubmit com as regras de escopo e forma das respostas",
+  "author": {
+    "name": "gabriel-lozorio"
+  }
+}
