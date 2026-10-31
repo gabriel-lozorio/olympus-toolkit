@@ -1,4 +1,4 @@
-# claude-config
+# olympus-toolkit
 
 Configuração pessoal do Claude Code, empacotada como plugin: skills globais + um hook que injeta regras de escopo e forma em toda mensagem.
 
@@ -36,9 +36,11 @@ Rode sempre depois de mexer no `response-rules.sh` — hook quebrado falha em si
 | `/explain` | reexplica do zero, em camadas, sem jargão nem `foo`/`bar` |
 | `/judge` | julga uma decisão com agentes adversariais (defesa, acusação, custo) + juiz independente |
 | `/kiss` | audita código simples e funcional (KISS, DRY, clean code, comentários, eficiência) |
+| `/rbac` | extrai a matriz papel × recurso × ação do código, com `arquivo:linha` em cada célula |
 | `/review-doc-business` | valida contrato, orçamento, proposta (escopo fechado, número com origem) |
 | `/review-doc-tech` | valida doc técnico (fonte obrigatória, `arquivo:linha` conferido) |
 | `/security` | audita a postura de segurança do sistema inteiro (cliente, API, infra, build) |
+| `/ship-pr` | cria branch, commita, dá push, abre a PR e comenta nela screenshots e vídeo capturados com o Playwright MCP |
 | `/shorten` | reescreve uma resposta prolixa, cortando sem perder fato |
 | `/solution-kiss` | acha a solução mais simples antes de existir código — escada de 6 degraus |
 | `/write-doc` | escreve doc técnico ou comercial já dentro da régua (fonte junto de cada afirmação) |
@@ -52,7 +54,7 @@ O hook `UserPromptSubmit` injeta 11 regras (escopo do que fazer + forma de respo
 ## Instalar em outra máquina
 
 ```
-/plugin marketplace add gabriel-lozorio/claude-config
+/plugin marketplace add gabriel-lozorio/olympus-toolkit
 /plugin install olympus
 ```
 
@@ -61,7 +63,7 @@ O hook `UserPromptSubmit` injeta 11 regras (escopo do que fazer + forma de respo
 Local, sem GitHub:
 
 ```
-/plugin marketplace add C:/caminho/para/claude-config
+/plugin marketplace add C:/caminho/para/olympus-toolkit
 /plugin install olympus
 ```
 
@@ -70,11 +72,11 @@ O equivalente por arquivo, em `~/.claude/settings.json`:
 ```json
 {
   "extraKnownMarketplaces": {
-    "claude-config": {
-      "source": { "source": "github", "repo": "gabriel-lozorio/claude-config" }
+    "olympus-toolkit": {
+      "source": { "source": "github", "repo": "gabriel-lozorio/olympus-toolkit" }
     }
   },
-  "enabledPlugins": { "olympus@claude-config": true }
+  "enabledPlugins": { "olympus@olympus-toolkit": true }
 }
 ```
 
