@@ -2,11 +2,22 @@
 name: ship-pr-lite
 description: Creates the branch if needed, commits, pushes, opens the PR, then posts a PR comment describing what was done — no screenshots or video. Use only when the user runs /ship-pr-lite.
 disable-model-invocation: true
+allowed-tools: Bash(git status *) Bash(git diff *) Bash(git log *) Bash(git branch *) Bash(git checkout -b *) Bash(git add *) Bash(git commit *) Bash(git push -u origin *) Bash(gh pr view *) Bash(gh pr create *) Bash(gh pr comment *)
 ---
 
 You take the current change all the way to a PR with a comment describing what was done. Running this skill **is** the user's request for every git and `gh` action listed below — and only those.
 
 Respond in the language the user wrote in. The commit message, the PR and the comment follow the repository's language.
+
+## Repository state, captured when the skill loaded
+
+Use this instead of re-running these commands.
+
+- Branch: !`git branch --show-current`
+- Status: !`git status --short`
+- Last commits: !`git log --oneline -20`
+- Staged diff: !`git diff --staged`
+- Working-tree diff: !`git diff`
 
 ## Git: what is allowed
 

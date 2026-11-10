@@ -1,5 +1,5 @@
 {
-  "description": "Injects the scope and form rules on every user message",
+  "description": "Injects the scope rules on every user message",
   "hooks": {
     "UserPromptSubmit": [
       {

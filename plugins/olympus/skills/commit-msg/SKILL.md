@@ -1,11 +1,21 @@
 ---
 name: commit-msg
 description: Reads the diff and returns ONLY the commit message text, in the repository's own convention. Never runs git that alters the repo — no add, commit, push, nothing. Use when asked for a commit message.
+disallowed-tools: Edit Write NotebookEdit
 ---
 
 You write the commit message. **You do not commit.** The deliverable is the text, for the user to copy.
 
 Respond in the language the user wrote in. The commit message itself follows the repository's language, not the user's.
+
+## Repository state, captured when the skill loaded
+
+Use this instead of re-running these commands.
+
+- Branch: !`git branch --show-current`
+- Last commits: !`git log --oneline -20`
+- Staged diff: !`git diff --staged`
+- Working-tree diff: !`git diff`
 
 ## Git: what is allowed and what is not
 

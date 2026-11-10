@@ -1,6 +1,7 @@
 ---
 name: explain
 description: Re-explains something the user did not understand, from scratch and didactically — new vocabulary, analogy, example with real data, in layers. Text only: does not edit, does not run, does not solve. Use when asked to explain something better.
+disallowed-tools: Edit Write NotebookEdit
 ---
 
 The user did not understand. The previous explanation **failed** — treat it as discarded, not as a starting point.

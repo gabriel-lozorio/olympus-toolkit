@@ -1,14 +1,10 @@
 {
   "mcpServers": {
     "playwright": {
-      "command": "npx",
+      "command": "sh",
       "args": [
-        "-y",
-        "@playwright/mcp@0.0.83",
-        "--headless",
-        "--caps=devtools",
-        "--output-dir",
-        "${CLAUDE_PLUGIN_DATA}/evidence"
+        "-c",
+        "cd \"$CLAUDE_PLUGIN_DATA\" && exec npx -y @playwright/mcp@0.0.83 --headless --browser=chromium --caps=devtools --output-dir \"$CLAUDE_PLUGIN_DATA/evidence\""
       ]
     }
   }

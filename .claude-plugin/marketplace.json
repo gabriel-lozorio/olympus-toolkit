@@ -9,7 +9,7 @@
     {
       "name": "olympus",
       "source": "./plugins/olympus",
-      "description": "Skills globais (code-kiss, commit-msg, estimate, explain, judge, kiss, review-doc-business, review-doc-tech, security, ship-pr, shorten, solution-kiss, write-doc) e o hook de regras de escopo e forma"
+      "description": "Skills globais (code-kiss, commit-msg, estimate, explain, judge, kiss, rbac, review-doc-business, review-doc-tech, security, ship-pr, ship-pr-lite, shorten, solution-kiss, write-doc), o hook de regras de escopo e o output style de regras de forma"
     }
   ]
 }

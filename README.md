@@ -1,6 +1,6 @@
 # olympus-toolkit
 
-Configuração pessoal do Claude Code, empacotada como plugin: skills globais + um hook que injeta regras de escopo e forma em toda mensagem.
+Configuração pessoal do Claude Code, empacotada como plugin: skills globais + um hook que injeta regras de escopo em toda mensagem + um output style com as regras de forma.
 
 Este repo é **marketplace e plugin ao mesmo tempo**: a raiz tem o `marketplace.json`, e o plugin `olympus` vive em `plugins/olympus/`.
 
@@ -10,10 +10,12 @@ Este repo é **marketplace e plugin ao mesmo tempo**: a raiz tem o `marketplace.
 .claude-plugin/marketplace.json     lista o plugin "olympus"
 test.sh                             valida o plugin antes do commit
 plugins/olympus/
-  .claude-plugin/plugin.json        nome, versão, descrição, autor
+  .claude-plugin/plugin.json        nome, descrição, autor
   skills/<nome>/SKILL.md            uma pasta por skill
   hooks/hooks.json                  registra o hook UserPromptSubmit
-  hooks/response-rules.sh          emite as regras como JSON
+  hooks/response-rules.sh          emite as regras de escopo como JSON
+  output-styles/olympus.md          regras de forma, aplicadas automaticamente
+  evals/<caso>/                     casos do claude plugin eval
 ```
 
 ## Testar
@@ -22,7 +24,9 @@ plugins/olympus/
 bash test.sh
 ```
 
-Confere que os três JSONs parseiam e que o hook devolve JSON válido com regras não vazias. Sai com código 1 em caso de falha, então dá pra encadear: `bash test.sh && git commit ...`.
+Precisa do `claude` e do `node` no PATH.
+
+Roda o `claude plugin validate` no marketplace e no plugin, confere que cada `SKILL.md` tem frontmatter com `name` igual ao nome da pasta e `description` preenchida, e que o hook devolve JSON válido com regras não vazias. Sai com código 1 em caso de falha, então dá pra encadear: `bash test.sh && git commit ...`.
 
 Rode sempre depois de mexer no `response-rules.sh` — hook quebrado falha em silêncio, sem erro na tela.
 
@@ -40,7 +44,8 @@ Rode sempre depois de mexer no `response-rules.sh` — hook quebrado falha em si
 | `/review-doc-business` | valida contrato, orçamento, proposta (escopo fechado, número com origem) |
 | `/review-doc-tech` | valida doc técnico (fonte obrigatória, `arquivo:linha` conferido) |
 | `/security` | audita a postura de segurança do sistema inteiro (cliente, API, infra, build) |
-| `/ship-pr` | cria branch, commita, dá push, abre a PR e comenta nela screenshots e vídeo capturados com o Playwright MCP |
+| `/ship-pr` | cria branch, commita, dá push, abre a PR e comenta nela screenshots e vídeo capturados com o Playwright MCP, o `playwright-cli` ou o `agent-browser` — o primeiro disponível |
+| `/ship-pr-lite` | cria branch, commita, dá push, abre a PR e comenta nela o que foi feito — sem screenshots nem vídeo |
 | `/shorten` | reescreve uma resposta prolixa, cortando sem perder fato |
 | `/solution-kiss` | acha a solução mais simples antes de existir código — escada de 6 degraus |
 | `/write-doc` | escreve doc técnico ou comercial já dentro da régua (fonte junto de cada afirmação) |
@@ -49,16 +54,44 @@ Todas podem ser chamadas por você com `/nome`, e também disparadas pelo própr
 
 Nome e corpo das skills são em inglês; cada uma instrui responder no idioma em que você escreveu.
 
-O hook `UserPromptSubmit` injeta 11 regras (escopo do que fazer + forma de responder) junto de cada mensagem que você manda.
+O hook `UserPromptSubmit` injeta as 7 regras de escopo (o que fazer) junto de cada mensagem que você manda. As 5 regras de forma (8–12, como responder) ficam no output style `olympus`, que o plugin aplica sozinho (`force-for-plugin: true`) e sobrepõe o `outputStyle` das suas configurações.
+
+## Navegador do `/ship-pr`
+
+O `/ship-pr` usa o primeiro destes que estiver disponível: Playwright MCP (vem no plugin), `playwright-cli`, `agent-browser`. Para ter os três numa máquina Ubuntu/WSL:
+
+```bash
+sudo apt-get install -y libnspr4 libnss3 libasound2t64 ffmpeg   # libs do Chromium; ffmpeg para o vídeo do agent-browser
+npx -y @playwright/mcp@0.0.83 install-browser chrome-for-testing
+npm install -g @playwright/cli agent-browser
+playwright-cli install-browser chromium
+agent-browser install
+```
+
+## Evals
+
+```bash
+claude plugin eval ./plugins/olympus --allow-tools Edit Write
+```
+
+Roda cada caso em `plugins/olympus/evals/` com e sem o plugin. As chamadas de modelo contam na sua cota. O `--allow-tools` libera Edit e Write para que o grader "nunca editou" teste algo de verdade.
 
 ## Instalar em outra máquina
+
+Em um passo (Claude Code 2.1.275+):
+
+```
+/plugin install olympus --marketplace gabriel-lozorio/olympus-toolkit
+```
+
+Ou em dois:
 
 ```
 /plugin marketplace add gabriel-lozorio/olympus-toolkit
 /plugin install olympus
 ```
 
-É assim que esta máquina está configurada. Como a fonte é o repositório remoto, `/plugin update olympus` puxa do GitHub — o que estiver só no working tree local não é visto.
+É assim que esta máquina está configurada. Como a fonte é o repositório remoto, `/plugin update olympus` puxa do GitHub — o que estiver só no working tree local não é visto. O `plugin.json` não fixa `version`, então cada commit no GitHub conta como versão nova.
 
 Local, sem GitHub:
 
@@ -81,6 +114,22 @@ O equivalente por arquivo, em `~/.claude/settings.json`:
 ```
 
 Qualquer um dos dois só passa a valer **no próximo start** do Claude Code.
+
+## Atualizar
+
+**Mesma máquina, outro repo** (marketplace instalado da pasta local, escopo `user`): o plugin é lido direto desta pasta. Salve aqui e reinicie o Claude Code no outro repo. Não precisa de commit nem de update.
+
+**Outra máquina** (marketplace instalado do GitHub):
+
+1. Neste repo: `bash test.sh`, commit e push para o GitHub. O que não foi pro GitHub não chega nas outras máquinas.
+2. Em cada máquina:
+
+```bash
+claude plugin marketplace update olympus-toolkit
+claude plugin update olympus@olympus-toolkit
+```
+
+3. Reinicie o Claude Code. A atualização só vale depois do restart.
 
 ## Editar as regras do hook
 

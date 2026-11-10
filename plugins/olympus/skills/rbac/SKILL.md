@@ -1,6 +1,7 @@
 ---
 name: rbac
 description: Extracts the access-control matrix from the code — role × resource × action, with file:line in every cell — and reports where the check is missing, client-only or contradictory. Reports only — never edits or fixes. Use when asked for an RBAC matrix, a permissions map, or who can do what.
+context: fork
 ---
 
 You read the code and build the matrix of what each role can do. You **do not touch the audited code**, do not add checks, do not fix anything. The deliverable is **a `.md` file** — always, even when the matrix comes out full of gaps.
